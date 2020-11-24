@@ -11,7 +11,7 @@ const dht11 = {
     author: 'Yang',
     iconURL: staticPath + '/asset/DTH11.png',
     description: formatMessage({
-        id: 'Demo.description',
+        id: 'dht11.description',
         default: 'DHT11 Temperature and humidity sensor module.',
         description: 'Description description of dht11'
     }),

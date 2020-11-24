@@ -6,7 +6,7 @@ function addGenerator(Blockly) {
         Blockly.Arduino.definitions_['include_PH20Port'] = '#include "PH20Port.h"\n';
         Blockly.Arduino.definitions_['include_ph_port'] = 'dht11 dht11;\n';
         Blockly.Arduino.definitions_['ph_port'] = 'PH20Port dhtPort(' + dropdown_dht11 + ");\n";
-        Blockly.Arduino.definitions_['timer_run_read'] = ' dht11.read(dhtPort.pin1());\n';
+        Blockly.Arduino.definitions_['timer_run_read'] = 'dht11.read(dhtPort.pin1());\n';
         var code = '(float)dht11.'+ dropdown_temhum;
         return [code, Blockly.Arduino.ORDER_ATOMIC];
     }
