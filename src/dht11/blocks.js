@@ -5,7 +5,7 @@ function addBlocks(Blockly) {
         init: function () {
             this.setColour(color_sensor);
             this.appendDummyInput("")
-                .appendField('Temperature and humidity sensor DHT11 interface')
+                .appendField(Blockly.Msg.MOTORDRIVERBOARD_DHT)
                 .appendField(new Blockly.FieldDropdown([
                     ['P1', "P1"],
                     ['P2', "P2"],
@@ -16,7 +16,7 @@ function addBlocks(Blockly) {
                     ['P11', "P11"],
                     ['P12', "P12"]
                 ]), "dht11")
-                .appendField('Read')
+                .appendField(Blockly.Msg.MOTORDRIVERBOARD_READDHT)
                 .appendField(new Blockly.FieldDropdown([
                     ['temperature', "temperature"],
                     ['humidity', "humidity"],

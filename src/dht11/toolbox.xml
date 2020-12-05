@@ -1,4 +1,4 @@
-<category name="Sensor" id="sensor" colour="#28BFE6" secondaryColour="#28BFE6">
+<category name="%{BKY_CATEGORY_SENSOR}" id="sensor" colour="#28BFE6" secondaryColour="#28BFE6">
     <block type="motorDriverBoard_dht11" id="motorDriverBoard_dht11">
     </block>
 </category>
