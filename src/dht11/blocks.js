@@ -1,29 +1,82 @@
 function addBlocks(Blockly) {
-    var color_sensor = '#28BFE6';
+    var color = '#28BFE6';
 
-    Blockly.Blocks.motorDriverBoard_dht11 = {
+    Blockly.Blocks['DHT_INIT'] = {
         init: function () {
-            this.setColour(color_sensor);
-            this.appendDummyInput("")
-                .appendField(Blockly.Msg.MOTORDRIVERBOARD_DHT)
-                .appendField(new Blockly.FieldDropdown([
-                    ['P1', "P1"],
-                    ['P2', "P2"],
-                    ['P3', "P3"],
-                    ['P4', "P4"],
-                    ['P9', "P9"],
-                    ['P10', "P10"],
-                    ['P11', "P11"],
-                    ['P12', "P12"]
-                ]), "dht11")
-                .appendField(Blockly.Msg.MOTORDRIVERBOARD_READDHT)
-                .appendField(new Blockly.FieldDropdown([
-                    ['temperature', "temperature"],
-                    ['humidity', "humidity"],
-                ]), "temhum")
-            this.setOutputShape(Blockly.OUTPUT_SHAPE_ROUND);
-            this.setOutput(true, 'Number');
-            this.setTooltip('');
+            this.jsonInit({
+                "message0": Blockly.Msg.DHT_INIT,
+                "args0": [{
+                    "type": "input_value",
+                    "name": "no"
+                }, {
+                    "type": "field_dropdown",
+                    "name": "pin",
+                    "options": [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['A0', 'A0'],
+                        ['A1', 'A1'],
+                        ['A2', 'A2'],
+                        ['A3', 'A3'],
+                        ['A4', 'A4'],
+                        ['A5', 'A5']]
+                }, {
+                    "type": "field_dropdown",
+                    "name": "mode",
+                    "options": [
+                        ['dht11', '11'],
+                        ['dht21', '21'],
+                        ['dht22', '22']]
+                }],
+                "colour": color,
+                "extensions": ["shape_statement"]
+            });
+        }
+    };
+
+    Blockly.Blocks['DHT_READ_HUMIDITY'] = {
+        init: function () {
+            this.jsonInit({
+                "message0": Blockly.Msg.DHT_READ_HUMIDITY,
+                "args0": [{
+                    "type": "input_value",
+                    "name": "no"
+                }],
+                "colour": color,
+                "extensions": ["output_number"]
+            });
+        }
+    };
+
+    Blockly.Blocks['DHT_READ_TEMPERATURE'] = {
+        init: function () {
+            this.jsonInit({
+                "message0": Blockly.Msg.DHT_READ_TEMPERATURE,
+                "args0": [{
+                    "type": "input_value",
+                    "name": "no"
+                }, {
+                    "type": "field_dropdown",
+                    "name": "unit",
+                    "options": [
+                        ['℃', 'false'],
+                        ['℉', 'true'],]
+                },],
+                "colour": color,
+                "extensions": ["output_number"]
+            });
         }
     };
     return Blockly;

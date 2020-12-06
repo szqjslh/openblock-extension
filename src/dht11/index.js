@@ -20,7 +20,6 @@ const dht11 = {
     generator:  staticPath + '/generator.js',
     toolbox:  staticPath + '/toolbox.xml',
     msg: staticPath + '/msg.js',
-    // arduino_lib: "lib",
     location: 'local',     // or 'remote'
     link: 'https://www.baidu.com',
 }
