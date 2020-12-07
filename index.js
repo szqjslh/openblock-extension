@@ -1,3 +1,9 @@
+var formatMessage = require ('format-message')
+formatMessage.setup({
+    locale: 'zh-cn',
+    translations: require('./locales.js')
+})
+
 const express = require('express');
 var extensions = require('require-all')({
     dirname: __dirname + '/src',
@@ -10,8 +16,6 @@ extensions = extensions.map(ext => {
     return ext[1]["index.js"];
 });
 
-// console.log('extensions=' + JSON.stringify(extensions));
-
 const app = express();
 
 app.use(function(req, res, next) {
@@ -22,7 +26,6 @@ app.use(function(req, res, next) {
 app.use(express.static(__dirname + '/src'));
 
 app.get('/', function (req, res) {
-    // res.setHeader('Access-Control-Allow-Origin', '*');
     res.send(JSON.stringify(extensions));
 });
 

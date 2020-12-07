@@ -12,7 +12,7 @@ const oled = {
     iconURL: staticPath + '/asset/OLED.png',
     description: formatMessage({
         id: 'oled.description',
-        default: 'I2c oled display',
+        default: 'I2C oled display',
         description: 'Description description of oled'
     }),
     featured: true,
