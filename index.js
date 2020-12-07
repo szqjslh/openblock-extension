@@ -1,4 +1,4 @@
-var formatMessage = require ('format-message')
+var formatMessage = require('format-message')
 formatMessage.setup({
     locale: 'zh-cn',
     translations: require('./locales.js')
@@ -18,10 +18,10 @@ extensions = extensions.map(ext => {
 
 const app = express();
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+    next();
 });
 app.use(express.static(__dirname + '/src'));
 
