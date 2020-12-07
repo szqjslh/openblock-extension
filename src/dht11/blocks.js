@@ -1,7 +1,7 @@
 function addBlocks(Blockly) {
     var color = '#28BFE6';
 
-    Blockly.Blocks['DHT_INIT'] = {
+    Blockly.Blocks['dht_init'] = {
         init: function () {
             this.jsonInit({
                 "message0": Blockly.Msg.DHT_INIT,
@@ -46,7 +46,7 @@ function addBlocks(Blockly) {
         }
     };
 
-    Blockly.Blocks['DHT_READ_HUMIDITY'] = {
+    Blockly.Blocks['dht_readHumidity'] = {
         init: function () {
             this.jsonInit({
                 "message0": Blockly.Msg.DHT_READ_HUMIDITY,
@@ -60,7 +60,7 @@ function addBlocks(Blockly) {
         }
     };
 
-    Blockly.Blocks['DHT_READ_TEMPERATURE'] = {
+    Blockly.Blocks['dht_readTemperature'] = {
         init: function () {
             this.jsonInit({
                 "message0": Blockly.Msg.DHT_READ_TEMPERATURE,
