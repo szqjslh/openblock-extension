@@ -18,7 +18,7 @@ const dht11 = {
     featured: true,
     blocks: staticPath + '/blocks.js',
     generator:  staticPath + '/generator.js',
-    toolbox:  staticPath + '/toolbox.xml',
+    toolbox:  staticPath + '/toolbox.js',
     msg: staticPath + '/msg.js',
     location: 'local',     // or 'remote'
     link: 'https://www.baidu.com',
