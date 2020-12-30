@@ -1,25 +1,18 @@
-function addGenerator(Blockly) {
+/* eslint-disable func-style */
+/* eslint-disable require-jsdoc */
+function addGenerator (Blockly) {
+    Blockly.Arduino.hc_sr04_read_distance = function (block) {
 
-    Blockly.Arduino['hc_sr04_read_distance'] = function (block) {
-        Blockly.Arduino.definitions_['define_hc_sr04_read_distance'] = ` float getDistance(int trig,int echo){
-            pinMode(trig,OUTPUT);
-            digitalWrite(trig,LOW);
-            delayMicroseconds(2);
-            digitalWrite(trig,HIGH);
-            delayMicroseconds(10);
-            digitalWrite(trig,LOW);
-            pinMode(echo, INPUT);
-            return pulseIn(echo,HIGH,30000)/58.0;
-        } `;
+        const trigPin = Blockly.Arduino.valueToCode(block, 'trigPin', Blockly.Arduino.ORDER_ATOMIC);
+        const echoPin = Blockly.Arduino.valueToCode(block, 'echoPin', Blockly.Arduino.ORDER_ATOMIC);
+        const unit = block.getFieldValue('unit');
 
-        let trig_pin = this.getFieldValue('trig_pin');
-        let echo_pin = this.getFieldValue('echo_pin');
-        // let no = Blockly.Arduino.valueToCode(this, 'no', Blockly.Arduino.ORDER_ATOMIC);
-        // let unit = this.getFieldValue('unit');
-        // ${trig_pin}
-        // ${echo_pin}
-        return [`getDistance(${trig_pin},${echo_pin})`, Blockly.Arduino.ORDER_ATOMIC];
-    }
+        Blockly.Arduino.includes_.include_hc_sr04_read = `#include <Ultrasonic.h>`;
+        Blockly.Arduino.definitions_[`definitions_hc_sr04_read${trigPin}${echoPin}`] =
+            `Ultrasonic ultrasonic_${trigPin}_${echoPin}(${trigPin}, ${echoPin});`;
+
+        return [`ultrasonic_${trigPin}_${echoPin}.read(${unit})`, Blockly.Arduino.ORDER_ATOMIC];
+    };
 
 
     return Blockly;

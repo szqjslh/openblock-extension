@@ -3,17 +3,21 @@ const path = require('path');
 
 const staticPath = path.relative(`${__dirname}/../../src`, __dirname);
 
-const dht11 = {
-    name: 'DHT11',
-    extensionId: 'dht11',
+const softwareSerial = {
+    name: formatMessage({
+        id: 'cooperativeScheduler.name',
+        default: 'Cooperative scheduler',
+        description: 'Name of cooperative scheduler'
+    }),
+    extensionId: 'cooperativeScheduler',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
     author: 'ArthurZheng',
-    iconURL: `${staticPath}/asset/DTH11.png`,
+    iconURL: `${staticPath}/asset/cooperativeScheduler.png`,
     description: formatMessage({
-        id: 'dht11.description',
-        default: 'DHT11 Temperature and humidity sensor module.',
-        description: 'Description of dht11'
+        id: 'cooperativeScheduler.description',
+        default: 'Allow Arduino run multiple applications.',
+        description: 'Description of cooperative scheduler'
     }),
     featured: true,
     blocks: `${staticPath}/blocks.js`,
@@ -21,8 +25,8 @@ const dht11 = {
     toolbox: `${staticPath}/toolbox.js`,
     msg: `${staticPath}/msg.js`,
     location: 'local', // or 'remote'
-    tags: ['sensor'],
+    tags: ['other'],
     link: 'https://www.baidu.com'
 };
 
-module.exports = dht11;
+module.exports = softwareSerial;

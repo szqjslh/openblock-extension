@@ -1,28 +1,30 @@
 const formatMessage = require('format-message');
-var path = require('path');
+const path = require('path');
 
-const staticPath = path.relative(__dirname + '/../../src', __dirname);
+const staticPath = path.relative(`${__dirname}/../../src`, __dirname);
 
 const oled = {
-    name: "OLED",
+    name: 'OLED',
     extensionId: 'oled',
-    version: "0.0.1",
-    supportDevice: ['arduinoUno', 'arduinoNano'],
+    version: '0.0.1',
+    supportDevice: ['arduinoUno'],
     author: 'Test',
-    iconURL: staticPath + '/asset/OLED.png',
+    iconURL: `${staticPath}/asset/OLED.png`,
     description: formatMessage({
         id: 'oled.description',
         default: 'I2C oled display',
-        description: 'Description description of oled'
+        description: 'Description of oled'
     }),
     featured: true,
-    blocks: staticPath + 'block.js',
-    generator:  staticPath + './generator.js',
-    toolbox:  staticPath + './toolbox.xml',
-    msg: staticPath + './language',
+    blocks: `${staticPath}block.js`,
+    generator: `${staticPath}./generator.js`,
+    toolbox: `${staticPath}./toolbox.xml`,
+    msg: `${staticPath}./language`,
     // arduino_lib: "lib",
     location: 'local',
+    tags: ['display'],
     link: 'https://www.baidu.com',
-}
+    disabled: true
+};
 
 module.exports = oled;

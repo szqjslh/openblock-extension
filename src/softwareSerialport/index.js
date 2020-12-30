@@ -3,17 +3,21 @@ const path = require('path');
 
 const staticPath = path.relative(`${__dirname}/../../src`, __dirname);
 
-const dht11 = {
-    name: 'DHT11',
-    extensionId: 'dht11',
+const softwareSerial = {
+    name: formatMessage({
+        id: 'softwareSerial.name',
+        default: 'Software serial',
+        description: 'Name of software serial'
+    }),
+    extensionId: 'softwareSerial',
     version: '1.0.0',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
     author: 'ArthurZheng',
-    iconURL: `${staticPath}/asset/DTH11.png`,
+    iconURL: `${staticPath}/asset/softwareSerial.png`,
     description: formatMessage({
-        id: 'dht11.description',
-        default: 'DHT11 Temperature and humidity sensor module.',
-        description: 'Description of dht11'
+        id: 'softwareSerial.description',
+        default: 'Allow serial communication on other digital pins of the Arduino.',
+        description: 'Description of software serial'
     }),
     featured: true,
     blocks: `${staticPath}/blocks.js`,
@@ -21,8 +25,8 @@ const dht11 = {
     toolbox: `${staticPath}/toolbox.js`,
     msg: `${staticPath}/msg.js`,
     location: 'local', // or 'remote'
-    tags: ['sensor'],
+    tags: ['other'],
     link: 'https://www.baidu.com'
 };
 
-module.exports = dht11;
+module.exports = softwareSerial;

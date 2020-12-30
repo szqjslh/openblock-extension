@@ -3,43 +3,46 @@
 /* eslint-disable require-jsdoc */
 function addToolbox () {
     return `
-<category name="%{BKY_L298N_CATEGORY}" id="L298N_CATEGORY" colour="#FF6F00" secondaryColour="#FF6F00" iconURI="">
-    <block type="l298n_init" id="l298n_init">
-        <value name="ch">
+<category name="%{BKY_SOFTWARESERIAL_CATEGORY}" id="SOFTWARESERIAL_CATEGORY" colour="#00D7B0" secondaryColour="#00D7B0">
+    <block type="softwareSerial_begin" id="softwareSerial_begin">
+        <value name="no">
             <shadow type="math_number">
                 <field name="NUM">0</field>
             </shadow>
         </value>
-        <value name="in1">
+        <value name="rx">
             <shadow type="math_number">
                 <field name="NUM">2</field>
             </shadow>
         </value>
-        <value name="in2">
+        <value name="tx">
             <shadow type="math_number">
                 <field name="NUM">3</field>
             </shadow>
         </value>
-        <value name="en">
-            <shadow type="math_number">
-                <field name="NUM">4</field>
-            </shadow>
-        </value>
+        <field name="baudrate">4800</field>
     </block>
-    <block type="l298n_run" id="l298n_run">
-        <value name="ch">
+    <block type="softwareSerial_print" id="softwareSerial_print">
+        <value name="no">
             <shadow type="math_number">
                 <field name="NUM">0</field>
             </shadow>
         </value>
-        <value name="speed">
-            <shadow type="math_number">
-                <field name="NUM">255</field>
+        <value name="data">
+            <shadow type="text">
+                <field name="TEXT">hello</field>
             </shadow>
         </value>
     </block>
-    <block type="l298n_stop" id="l298n_stop">
-        <value name="ch">
+    <block type="softwareSerial_available" id="softwareSerial_available">
+        <value name="no">
+            <shadow type="math_number">
+                <field name="NUM">0</field>
+            </shadow>
+        </value>
+    </block>
+    <block type="softwareSerial_readAByte" id="softwareSerial_readAByte">
+        <value name="no">
             <shadow type="math_number">
                 <field name="NUM">0</field>
             </shadow>
