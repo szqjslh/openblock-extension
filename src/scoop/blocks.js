@@ -55,6 +55,20 @@ function addBlocks (Blockly) {
         }
     };
 
+    Blockly.Blocks.cooperativeScheduler_sleep = {
+        init: function () {
+            this.jsonInit({
+                message0: Blockly.Msg.COOPERATIVESCHEDULER_SLEEP,
+                args0: [{
+                    type: 'input_value',
+                    name: 'time'
+                }],
+                colour: color,
+                extensions: ['shape_statement']
+            });
+        }
+    };
+
     return Blockly;
 }
 

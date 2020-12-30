@@ -27,6 +27,11 @@ ${loopBranch}}`;
         return '';
     };
 
+    Blockly.Arduino.cooperativeScheduler_sleep = function (block) {
+        const time = Blockly.Arduino.valueToCode(block, 'time', Blockly.Arduino.ORDER_ATOMIC);
+        return `sleep(${time});\n`;
+    };
+
     return Blockly;
 }
 
