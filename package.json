@@ -4,7 +4,7 @@
   "description": "External extensions for  Scratch 3.0 projects",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js",
+    "start": "node ./server.js",
     "lint": "eslint ./src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +13,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "format-message": "^6.2.3",
+    "os-locale": "^5.0.0",
     "require-all": "^3.0.0"
   },
   "devDependencies": {
