@@ -1,6 +1,8 @@
 # scratchhw-extension
 
-Provide a local extension server for scrach3.
+![](https://img.shields.io/travis/com/ScratchHW/scratchhw-extension) ![](https://img.shields.io/github/license/ScratchHW/scratchhw-extension)
+
+Provide a local extension server for scrachhw.
 
 ### Instructions
 
