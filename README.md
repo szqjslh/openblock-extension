@@ -1,4 +1,4 @@
-# scratch-extension-server
+# scratchhw-extension
 
 Provide a local extension server for scrach3.
 
