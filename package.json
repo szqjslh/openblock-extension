@@ -1,6 +1,6 @@
 {
-  "name": "scratch-extension",
-  "version": "1.0.0",
+  "name": "scratchhw-extension",
+  "version": "0.1.0",
   "description": "External extensions for  Scratch 3.0 projects",
   "main": "index.js",
   "scripts": {
