@@ -3,8 +3,15 @@ const osLocale = require('os-locale');
 const express = require('express');
 const requireAll = require('require-all');
 const Emitter = require('events');
+const path = require('path');
+const fs = require('fs');
+const copydir = require('copy-dir');
 
-const translations = require('./locales.js');
+/**
+ * Configuration the default user data path.
+ * @readonly
+ */
+const DEFAULT_USER_DATA_PATH = path.join(__dirname, '../.scratchhwData');
 
 /**
  * Configuration the default port.
@@ -26,11 +33,89 @@ class ScratchHWExtensionServer extends Emitter{
     /**
      * Construct a ScratchHW extension server object.
      */
-    constructor () {
+    constructor (userDataPath, extensionsPath) {
         super();
+
+        if (userDataPath) {
+            this._userDataPath = path.join(userDataPath, 'extensions');
+        } else {
+            this._userDataPath = path.join(DEFAULT_USER_DATA_PATH, 'extensions');
+        }
+
+        if (extensionsPath) {
+            this._extensionsPath = path.join(extensionsPath, 'extensions');
+        } else {
+            this._extensionsPath = __dirname;
+        }
 
         this._socketPort = DEFAULT_PORT;
         this._locale = DEFAULT_LANGUAGE;
+
+        if (this.checkFirstRun()) {
+            this.copyToUserDataPath();
+        }
+    }
+
+    checkFirstRun () {
+        if (!fs.existsSync(this._userDataPath)) {
+            console.log(`First start, copy extensions file to ${this._userDataPath}`);
+            return true;
+        }
+        return false;
+    }
+
+    copyToUserDataPath () {
+        formatMessage.setup({missingTranslation: 'ignore'});
+
+        let extensions = requireAll({
+            dirname: path.join(this._extensionsPath, 'src'),
+            filter: /index.js$/,
+            recursive: true
+        });
+
+        extensions = Object.entries(extensions);
+        extensions.forEach(ext => {
+            const src = path.join(this._extensionsPath, 'src', ext[0]);
+            const dst = path.join(this._userDataPath, 'exts', ext[0]);
+            const type = ext[1]['index.js'].type;
+
+            if (!fs.existsSync(dst)) {
+                fs.mkdirSync(dst, {recursive: true});
+            }
+
+            copydir.sync(src, dst,
+                {
+                    utimes: true,
+                    mode: true,
+                    filter: function (stat, filepath, filename){
+                        // do not want copy lib directories
+                        if (stat === 'directory' && filename === 'lib') {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+            );
+
+            // if arduino copy the lib to '${this._userDataPath}/libraries/Arduino' if it is exist.
+            if (type === 'arduino') {
+                const lib = path.join(src, 'lib');
+                const arduinoLibPath = path.join(this._userDataPath, 'libraries/Arduino');
+                if (fs.existsSync(lib)) {
+                    if (!fs.existsSync(arduinoLibPath)) {
+                        fs.mkdirSync(arduinoLibPath, {recursive: true});
+                    }
+                    copydir.sync(path.join(src, 'lib'), arduinoLibPath,
+                        {utimes: true, mode: true});
+                }
+            }
+        });
+
+        // Copy the tranlation file to the userDataPath for extenions's index file.
+        copydir.sync(path.join(this._extensionsPath, 'src', 'locales.js'),
+            path.join(this._userDataPath, 'exts/locales.js'), {utimes: true, mode: true});
+
+        formatMessage.setup({missingTranslation: 'warning'});
     }
 
     setLocale () {
@@ -48,7 +133,8 @@ class ScratchHWExtensionServer extends Emitter{
 
                 formatMessage.setup({
                     locale: this._locale,
-                    translations: translations
+                    // eslint-disable-next-line global-require
+                    translations: require(path.join(this._userDataPath, 'exts', 'locales.js'))
                 });
                 return resolve();
             });
@@ -66,13 +152,20 @@ class ScratchHWExtensionServer extends Emitter{
 
         this.setLocale().then(() => {
             let extensions = requireAll({
-                dirname: `${__dirname}/src`,
+                dirname: `${this._userDataPath}/exts`,
                 filter: /index.js$/,
                 recursive: true
             });
 
             extensions = Object.entries(extensions);
-            extensions = extensions.map(ext => ext[1]['index.js']);
+            extensions = extensions.map(ext => {
+                ext[1]['index.js'].iconURL = path.join(ext[0], ext[1]['index.js'].iconURL);
+                ext[1]['index.js'].blocks = path.join(ext[0], ext[1]['index.js'].blocks);
+                ext[1]['index.js'].generator = path.join(ext[0], ext[1]['index.js'].generator);
+                ext[1]['index.js'].toolbox = path.join(ext[0], ext[1]['index.js'].toolbox);
+                ext[1]['index.js'].msg = path.join(ext[0], ext[1]['index.js'].msg);
+                return ext[1]['index.js'];
+            });
 
             this._app = express();
 
@@ -81,7 +174,7 @@ class ScratchHWExtensionServer extends Emitter{
                 res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
                 next();
             });
-            this._app.use(express.static(`${__dirname}/src`));
+            this._app.use(express.static(`${this._userDataPath}/exts`));
 
             this._app.get('/', (req, res) => {
                 res.send(JSON.stringify(extensions));

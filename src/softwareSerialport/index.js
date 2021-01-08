@@ -1,7 +1,5 @@
+module.paths = module.paths.concat(require.main.paths);
 const formatMessage = require('format-message');
-const path = require('path');
-
-const staticPath = path.relative(`${__dirname}/../../src`, __dirname);
 
 const softwareSerial = {
     name: formatMessage({
@@ -11,22 +9,23 @@ const softwareSerial = {
     }),
     extensionId: 'softwareSerial',
     version: '1.0.0',
+    type: 'arduino',
     supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
     author: 'ArthurZheng',
-    iconURL: `${staticPath}/asset/softwareSerial.png`,
+    iconURL: `asset/softwareSerial.png`,
     description: formatMessage({
         id: 'softwareSerial.description',
         default: 'Allow serial communication on other digital pins of the Arduino.',
         description: 'Description of software serial'
     }),
     featured: true,
-    blocks: `${staticPath}/blocks.js`,
-    generator: `${staticPath}/generator.js`,
-    toolbox: `${staticPath}/toolbox.js`,
-    msg: `${staticPath}/msg.js`,
+    blocks: `blocks.js`,
+    generator: `generator.js`,
+    toolbox: `toolbox.js`,
+    msg: `msg.js`,
     location: 'local', // or 'remote'
     tags: ['other'],
-    link: 'https://www.baidu.com'
+    helpLink: 'https://www.baidu.com'
 };
 
 module.exports = softwareSerial;
