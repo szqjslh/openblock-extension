@@ -43,9 +43,9 @@ class ScratchHWExtension extends Emitter{
         }
 
         if (extensionsPath) {
-            this._extensionsPath = path.join(extensionsPath, 'extensions');
+            this._extensionsPath = extensionsPath;
         } else {
-            this._extensionsPath = __dirname;
+            this._extensionsPath = path.join(__dirname, 'src');
         }
 
         this._socketPort = DEFAULT_PORT;
@@ -68,14 +68,14 @@ class ScratchHWExtension extends Emitter{
         formatMessage.setup({missingTranslation: 'ignore'});
 
         let extensions = requireAll({
-            dirname: path.join(this._extensionsPath, 'src'),
+            dirname: this._extensionsPath,
             filter: /index.js$/,
             recursive: true
         });
 
         extensions = Object.entries(extensions);
         extensions.forEach(ext => {
-            const src = path.join(this._extensionsPath, 'src', ext[0]);
+            const src = path.join(this._extensionsPath, ext[0]);
             const dst = path.join(this._userDataPath, 'exts', ext[0]);
             const type = ext[1]['index.js'].type;
 
@@ -112,7 +112,7 @@ class ScratchHWExtension extends Emitter{
         });
 
         // Copy the tranlation file to the userDataPath for extenions's index file.
-        copydir.sync(path.join(this._extensionsPath, 'src', 'locales.js'),
+        copydir.sync(path.join(this._extensionsPath, 'locales.js'),
             path.join(this._userDataPath, 'exts/locales.js'), {utimes: true, mode: true});
 
         formatMessage.setup({missingTranslation: 'warning'});
