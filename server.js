@@ -1,4 +1,4 @@
-const ScratchHWExtensionServer = require('./index');
+const ScratchHWExtension = require('./index');
 
-const extensionServer = new ScratchHWExtensionServer();
+const extensionServer = new ScratchHWExtension();
 extensionServer.listen();

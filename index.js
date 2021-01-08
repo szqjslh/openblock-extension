@@ -28,7 +28,7 @@ const DEFAULT_LANGUAGE = 'en';
 /**
  * @class A server to provide local extensions resource.
  */
-class ScratchHWExtensionServer extends Emitter{
+class ScratchHWExtension extends Emitter{
 
     /**
      * Construct a ScratchHW extension server object.
@@ -188,4 +188,4 @@ class ScratchHWExtensionServer extends Emitter{
     }
 }
 
-module.exports = ScratchHWExtensionServer;
+module.exports = ScratchHWExtension;
