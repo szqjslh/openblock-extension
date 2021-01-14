@@ -1,7 +1,4 @@
-module.paths = module.paths.concat(require.main.paths);
-const formatMessage = require('format-message');
-
-const softwareSerial = {
+const softwareSerial = formatMessage => ({
     name: formatMessage({
         id: 'softwareSerial.name',
         default: 'Software serial',
@@ -26,6 +23,6 @@ const softwareSerial = {
     location: 'local', // or 'remote'
     tags: ['other'],
     helpLink: 'https://www.baidu.com'
-};
+});
 
 module.exports = softwareSerial;

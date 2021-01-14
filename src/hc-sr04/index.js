@@ -1,7 +1,4 @@
-module.paths = module.paths.concat(require.main.paths);
-const formatMessage = require('format-message');
-
-const hcSr04 = {
+const hcSr04 = formatMessage => ({
     name: 'HC_SR04',
     extensionId: 'hc_sr04',
     version: '1.0.0',
@@ -22,6 +19,6 @@ const hcSr04 = {
     location: 'local', // or 'remote'
     tags: ['sensor'],
     helpLink: 'https://www.baidu.com'
-};
+});
 
 module.exports = hcSr04;

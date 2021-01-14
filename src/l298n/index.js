@@ -1,7 +1,4 @@
-module.paths = module.paths.concat(require.main.paths);
-const formatMessage = require('format-message');
-
-const l298n = {
+const l298n = formatMessage => ({
     name: 'L298N',
     extensionId: 'l298n',
     version: '1.0.0',
@@ -22,6 +19,6 @@ const l298n = {
     location: 'local', // or 'remote'
     tags: ['actuator'],
     helpLink: 'https://www.baidu.com'
-};
+});
 
 module.exports = l298n;

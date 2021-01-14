@@ -1,7 +1,4 @@
-module.paths = module.paths.concat(require.main.paths);
-const formatMessage = require('format-message');
-
-const oled = {
+const oled = formatMessage => ({
     name: 'OLED',
     extensionId: 'oled',
     version: '0.0.1',
@@ -23,6 +20,6 @@ const oled = {
     tags: ['display'],
     helpLink: 'https://www.baidu.com',
     disabled: true
-};
+});
 
 module.exports = oled;

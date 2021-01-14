@@ -1,7 +1,4 @@
-module.paths = module.paths.concat(require.main.paths);
-const formatMessage = require('format-message');
-
-const dht11 = {
+const dht11 = formatMessage => ({
     name: 'DHT11',
     extensionId: 'dht11',
     version: '1.0.0',
@@ -22,6 +19,6 @@ const dht11 = {
     location: 'local', // or 'remote'
     tags: ['sensor'],
     helpLink: 'https://www.baidu.com'
-};
+});
 
 module.exports = dht11;

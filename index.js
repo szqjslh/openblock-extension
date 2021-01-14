@@ -77,7 +77,7 @@ class ScratchHWExtension extends Emitter{
         extensions.forEach(ext => {
             const src = path.join(this._extensionsPath, ext[0]);
             const dst = path.join(this._userDataPath, 'exts', ext[0]);
-            const type = ext[1]['index.js'].type;
+            const type = ext[1]['index.js'](formatMessage).type;
 
             if (!fs.existsSync(dst)) {
                 fs.mkdirSync(dst, {recursive: true});
@@ -159,12 +159,13 @@ class ScratchHWExtension extends Emitter{
 
             extensions = Object.entries(extensions);
             extensions = extensions.map(ext => {
-                ext[1]['index.js'].iconURL = path.join(ext[0], ext[1]['index.js'].iconURL);
-                ext[1]['index.js'].blocks = path.join(ext[0], ext[1]['index.js'].blocks);
-                ext[1]['index.js'].generator = path.join(ext[0], ext[1]['index.js'].generator);
-                ext[1]['index.js'].toolbox = path.join(ext[0], ext[1]['index.js'].toolbox);
-                ext[1]['index.js'].msg = path.join(ext[0], ext[1]['index.js'].msg);
-                return ext[1]['index.js'];
+                const content = ext[1]['index.js'](formatMessage);
+                content.iconURL = path.join(ext[0], content.iconURL);
+                content.blocks = path.join(ext[0], content.blocks);
+                content.generator = path.join(ext[0], content.generator);
+                content.toolbox = path.join(ext[0], content.toolbox);
+                content.msg = path.join(ext[0], content.msg);
+                return content;
             });
 
             this._app = express();
