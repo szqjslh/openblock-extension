@@ -1,4 +1,4 @@
-const ScratchHWExtension = require('./index');
+const OpenBlockExtension = require('./index');
 
-const extensionServer = new ScratchHWExtension();
+const extensionServer = new OpenBlockExtension();
 extensionServer.listen();

@@ -1,11 +1,11 @@
 {
-  "name": "scratchhw-extension",
+  "name": "openblock-extension",
   "version": "0.1.0",
-  "description": "External extensions for  Scratch 3.0 projects",
+  "description": "External extensions for OpenBlock projects",
   "main": "index.js",
   "scripts": {
-    "start": "rimraf ../.scratchhwData/extensions && node ./server.js",
-    "clean": "rimraf ../.scratchhwData/extensions",
+    "start": "rimraf ../.openblockData/extensions && node ./server.js",
+    "clean": "rimraf ../.openblockData/extensions",
     "lint": "eslint ./src",
     "test": ""
   },

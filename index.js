@@ -11,7 +11,7 @@ const copydir = require('copy-dir');
  * Configuration the default user data path.
  * @readonly
  */
-const DEFAULT_USER_DATA_PATH = path.join(__dirname, '../.scratchhwData');
+const DEFAULT_USER_DATA_PATH = path.join(__dirname, '../.openblockData');
 
 /**
  * Configuration the default port.
@@ -28,10 +28,10 @@ const DEFAULT_LANGUAGE = 'en';
 /**
  * @class A server to provide local extensions resource.
  */
-class ScratchHWExtension extends Emitter{
+class OpenBlockExtension extends Emitter{
 
     /**
-     * Construct a ScratchHW extension server object.
+     * Construct a OpenBlock extension server object.
      */
     constructor (userDataPath, extensionsPath) {
         super();
@@ -189,4 +189,4 @@ class ScratchHWExtension extends Emitter{
     }
 }
 
-module.exports = ScratchHWExtension;
+module.exports = OpenBlockExtension;
