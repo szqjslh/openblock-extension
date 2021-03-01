@@ -8,7 +8,7 @@ function addGenerator (Blockly) {
         const unit = block.getFieldValue('unit');
 
         Blockly.Arduino.includes_.include_hc_sr04_read = `#include <Ultrasonic.h>`;
-        Blockly.Arduino.definitions_[`definitions_hc_sr04_read${trigPin}${echoPin}`] =
+        Blockly.Arduino.definitions_[`hc_sr04_read${trigPin}${echoPin}`] =
             `Ultrasonic ultrasonic_${trigPin}_${echoPin}(${trigPin}, ${echoPin});`;
 
         return [`ultrasonic_${trigPin}_${echoPin}.read(${unit})`, Blockly.Arduino.ORDER_ATOMIC];

@@ -8,7 +8,7 @@ function addGenerator (Blockly) {
         const in2 = Blockly.Arduino.valueToCode(block, 'in2', Blockly.Arduino.ORDER_ATOMIC);
         const en = Blockly.Arduino.valueToCode(block, 'en', Blockly.Arduino.ORDER_ATOMIC);
 
-        Blockly.Arduino.definitions_[`define_l298n_init_${ch}`] =
+        Blockly.Arduino.definitions_[`l298n_init_${ch}`] =
 `void l298n_run_${ch}(bool dir, int speed) {
   if(speed > 0){
     if(dir == true) {
@@ -37,7 +37,7 @@ void l298n_break_${ch}() {
   analogWrite(${en}, 255);
 }
 `;
-        Blockly.Arduino.setups_[`setup_l298n_init_${ch}`] =
+        Blockly.Arduino.setups_[`l298n_init_${ch}`] =
 `pinMode(${in1},OUTPUT);
   pinMode(${in2},OUTPUT);
   pinMode(${en},OUTPUT);

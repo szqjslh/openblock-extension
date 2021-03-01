@@ -14,7 +14,7 @@ function addGenerator (Blockly) {
         loopBranch = Blockly.Arduino.addLoopTrap(loopBranch, block.id);
 
         Blockly.Arduino.includes_.include_cooperativeScheduler_setup = `#include "SCoop.h"`;
-        Blockly.Arduino.definitions_[`define_cooperativeScheduler_setup${no}`] =
+        Blockly.Arduino.definitions_[`cooperativeScheduler_setup${no}`] =
 `defineTask(Task${no});
 
 void Task${no}::setup() {

@@ -8,8 +8,8 @@ function addGenerator (Blockly) {
         const tx = Blockly.Arduino.valueToCode(block, 'tx', Blockly.Arduino.ORDER_ATOMIC);
         const baudrate = this.getFieldValue('baudrate');
 
-        Blockly.Arduino.includes_.include_dht_init = `#include <SoftwareSerial.h>`;
-        Blockly.Arduino.definitions_[`define_softwareSerial_begin${no}`] = `SoftwareSerial softwareSerial_${no}(${rx}, ${tx});`;
+        Blockly.Arduino.includes_.dht_init = `#include <SoftwareSerial.h>`;
+        Blockly.Arduino.definitions_[`softwareSerial_begin${no}`] = `SoftwareSerial softwareSerial_${no}(${rx}, ${tx});`;
         return `softwareSerial_${no}.begin(${baudrate});\n`;
     };
 

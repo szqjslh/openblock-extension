@@ -8,7 +8,7 @@ function addGenerator (Blockly) {
         const mode = this.getFieldValue('mode');
 
         Blockly.Arduino.includes_.include_dht_init = `#include <DHT.h>`;
-        Blockly.Arduino.definitions_[`define_dht_init_${no}`] = `DHT dht_${no}(${pin}, ${mode});`;
+        Blockly.Arduino.definitions_[`dht_init_${no}`] = `DHT dht_${no}(${pin}, ${mode});`;
         return '';
     };
 

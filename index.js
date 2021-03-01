@@ -67,48 +67,50 @@ class OpenBlockExtension extends Emitter{
     copyToUserDataPath () {
         formatMessage.setup({missingTranslation: 'ignore'});
 
-        let extensions = requireAll({
+        const extensions = requireAll({
             dirname: this._extensionsPath,
             filter: /index.js$/,
             recursive: true
         });
 
-        extensions = Object.entries(extensions);
-        extensions.forEach(ext => {
-            const src = path.join(this._extensionsPath, ext[0]);
-            const dst = path.join(this._userDataPath, 'exts', ext[0]);
-            const type = ext[1]['index.js'](formatMessage).type;
+        Object.entries(extensions).forEach(catlog => {
+            Object.entries(catlog[1]).forEach(ext => {
+                const basePath = path.join(catlog[0], ext[0]);
+                const src = path.join(this._extensionsPath, basePath);
+                const dst = path.join(this._userDataPath, 'exts', basePath);
+                const type = ext[1]['index.js'](formatMessage).type;
 
-            if (!fs.existsSync(dst)) {
-                fs.mkdirSync(dst, {recursive: true});
-            }
+                if (!fs.existsSync(dst)) {
+                    fs.mkdirSync(dst, {recursive: true});
+                }
 
-            copydir.sync(src, dst,
-                {
-                    utimes: true,
-                    mode: true,
-                    filter: function (stat, filepath, filename){
+                copydir.sync(src, dst,
+                    {
+                        utimes: true,
+                        mode: true,
+                        filter: function (stat, filepath, filename){
                         // do not want copy lib directories
-                        if (stat === 'directory' && filename === 'lib') {
-                            return false;
+                            if (stat === 'directory' && filename === 'lib') {
+                                return false;
+                            }
+                            return true;
                         }
-                        return true;
                     }
-                }
-            );
+                );
 
-            // if arduino copy the lib to '${this._userDataPath}/libraries/Arduino' if it is exist.
-            if (type === 'arduino') {
-                const lib = path.join(src, 'lib');
-                const arduinoLibPath = path.join(this._userDataPath, 'libraries/Arduino');
-                if (fs.existsSync(lib)) {
-                    if (!fs.existsSync(arduinoLibPath)) {
-                        fs.mkdirSync(arduinoLibPath, {recursive: true});
+                // if arduino copy the lib to '${this._userDataPath}/libraries/Arduino' if it is exist.
+                if (type === 'arduino') {
+                    const lib = path.join(src, 'lib');
+                    const arduinoLibPath = path.join(this._userDataPath, 'libraries/Arduino');
+                    if (fs.existsSync(lib)) {
+                        if (!fs.existsSync(arduinoLibPath)) {
+                            fs.mkdirSync(arduinoLibPath, {recursive: true});
+                        }
+                        copydir.sync(path.join(src, 'lib'), arduinoLibPath,
+                            {utimes: true, mode: true});
                     }
-                    copydir.sync(path.join(src, 'lib'), arduinoLibPath,
-                        {utimes: true, mode: true});
                 }
-            }
+            });
         });
 
         // Copy the tranlation file to the userDataPath for extenions's index file.
@@ -151,21 +153,28 @@ class OpenBlockExtension extends Emitter{
         }
 
         this.setLocale().then(() => {
-            let extensions = requireAll({
+            const extensions = requireAll({
                 dirname: `${this._userDataPath}/exts`,
                 filter: /index.js$/,
                 recursive: true
             });
 
-            extensions = Object.entries(extensions);
-            extensions = extensions.map(ext => {
-                const content = ext[1]['index.js'](formatMessage);
-                content.iconURL = path.join(ext[0], content.iconURL);
-                content.blocks = path.join(ext[0], content.blocks);
-                content.generator = path.join(ext[0], content.generator);
-                content.toolbox = path.join(ext[0], content.toolbox);
-                content.msg = path.join(ext[0], content.msg);
-                return content;
+            const extensionsThumbnailData = [];
+            Object.entries(extensions).forEach(catlog => {
+                Object.entries(catlog[1]).forEach(ext => {
+
+                    const content = ext[1]['index.js'](formatMessage);
+                    const basePath = path.join(catlog[0], ext[0]);
+
+                    if (content.iconURL) {
+                        content.iconURL = path.join(basePath, content.iconURL);
+                    }
+                    content.blocks = path.join(basePath, content.blocks);
+                    content.generator = path.join(basePath, content.generator);
+                    content.toolbox = path.join(basePath, content.toolbox);
+                    content.msg = path.join(basePath, content.msg);
+                    extensionsThumbnailData.push(content);
+                });
             });
 
             this._app = express();
@@ -178,7 +187,7 @@ class OpenBlockExtension extends Emitter{
             this._app.use(express.static(`${this._userDataPath}/exts`));
 
             this._app.get('/', (req, res) => {
-                res.send(JSON.stringify(extensions));
+                res.send(JSON.stringify(extensionsThumbnailData));
             });
 
             this._app.listen(this._socketPort);
