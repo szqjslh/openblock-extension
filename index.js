@@ -109,6 +109,17 @@ class OpenBlockExtension extends Emitter{
                         copydir.sync(path.join(src, 'lib'), arduinoLibPath,
                             {utimes: true, mode: true});
                     }
+                } else if (type === 'microbit') {
+                    // if microbit copy the lib to '${this._userDataPath}/libraries/Microbit' if it is exist.
+                    const lib = path.join(src, 'lib');
+                    const microbitLibPath = path.join(this._userDataPath, 'libraries/Microbit');
+                    if (fs.existsSync(lib)) {
+                        if (!fs.existsSync(microbitLibPath)) {
+                            fs.mkdirSync(microbitLibPath, {recursive: true});
+                        }
+                        copydir.sync(path.join(src, 'lib'), microbitLibPath,
+                            {utimes: true, mode: true});
+                    }
                 }
             });
         });

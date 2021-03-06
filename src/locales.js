@@ -8,7 +8,9 @@ module.exports = {
         'softwareSerial.description': 'Allow serial communication on other digital pins of the Arduino.',
         'cooperativeScheduler.name': 'Cooperative scheduler',
         'cooperativeScheduler.description': 'Allow Arduino run multiple applications.',
-        'ironKit.description': 'Yiqichuang iron kit robot.'
+        'ironKit.description': 'Yiqichuang iron kit robot.',
+        'servo.name': 'Servo',
+        'servo.description': 'Classic servo support for microbit.'
     },
     'zh-cn': {
         'l298n.description': 'L298N 电机驱动模块.',
@@ -19,6 +21,8 @@ module.exports = {
         'softwareSerial.description': '使Arduino可以使用其他数字口进行串口通信.',
         'cooperativeScheduler.name': '多任务调度器',
         'cooperativeScheduler.description': '使Arduino可以运行多个应用.',
-        'ironKit.description': '意启创金属套件机器人.'
+        'ironKit.description': '意启创金属套件机器人.',
+        'servo.name': '舵机',
+        'servo.description': '让Microbit可以控制普通的舵机.'
     }
 };
