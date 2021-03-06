@@ -20,7 +20,6 @@ const softwareSerial = formatMessage => ({
     generator: `generator.js`,
     toolbox: `toolbox.js`,
     msg: `msg.js`,
-    location: 'local', // or 'remote'
     tags: ['other'],
     helpLink: 'https://www.baidu.com'
 });

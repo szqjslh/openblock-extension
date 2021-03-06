@@ -117,7 +117,7 @@ class DCMotor
   DCMotor(void);
   friend class MotorDriver;
   void run(uint8_t);
-  void setSpeed(uint8_t);
+  void setSpeed(int16_t);
 
  private:
   uint8_t PWMpin, IN1pin, IN2pin;

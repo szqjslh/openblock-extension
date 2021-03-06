@@ -17,7 +17,7 @@ function addToolbox () {
     </block>
     <block type="ironKit_setServoDegree" id="ironKit_setServoDegree">
         <value name="degree">
-            <shadow type="math_number">
+            <shadow type="math_angle">
                 <field name="NUM">90</field>
             </shadow>
         </value>

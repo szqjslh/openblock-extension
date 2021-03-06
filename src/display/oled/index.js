@@ -16,7 +16,6 @@ const oled = formatMessage => ({
     generator: `generator.js`,
     toolbox: `toolbox.xml`,
     msg: `language`,
-    location: 'local',
     tags: ['display'],
     helpLink: 'https://www.baidu.com',
     disabled: true

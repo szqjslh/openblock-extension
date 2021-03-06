@@ -16,7 +16,6 @@ const dht11 = formatMessage => ({
     generator: `generator.js`,
     toolbox: `toolbox.js`,
     msg: `msg.js`,
-    location: 'local', // or 'remote'
     tags: ['sensor'],
     helpLink: 'https://www.baidu.com'
 });

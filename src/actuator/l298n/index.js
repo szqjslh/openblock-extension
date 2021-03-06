@@ -9,14 +9,13 @@ const l298n = formatMessage => ({
     description: formatMessage({
         id: 'l298n.description',
         default: 'l298n motor drive module.',
-        description: 'Description of dht11'
+        description: 'Description of l298n'
     }),
     featured: true,
     blocks: `blocks.js`,
     generator: `generator.js`,
     toolbox: `toolbox.js`,
     msg: `msg.js`,
-    location: 'local', // or 'remote'
     tags: ['actuator'],
     helpLink: 'https://www.baidu.com'
 });
