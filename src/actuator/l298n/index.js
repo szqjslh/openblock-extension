@@ -17,7 +17,7 @@ const l298n = formatMessage => ({
     toolbox: `toolbox.js`,
     msg: `msg.js`,
     tags: ['actuator'],
-    helpLink: 'https://www.baidu.com'
+    helpLink: 'https://openblockcc.gitee.io/wiki/'
 });
 
 module.exports = l298n;

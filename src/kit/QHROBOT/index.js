@@ -21,7 +21,7 @@ const QDPRobot = formatMessage => ({
     toolbox: `toolbox.js`,
     msg: `msg.js`,
     tags: ['kit'],
-    helpLink: 'https://qdprobot.taobao.com'
+    helpLink: 'http://www.qdprobot.com/'
 });
 
 module.exports = QDPRobot;

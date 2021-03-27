@@ -21,7 +21,7 @@ const ps2 = formatMessage => ({
     toolbox: `toolbox.js`,
     msg: `msg.js`,
     tags: ['communication'],
-    helpLink: 'https://openblockcc.github.io/wiki/'
+    helpLink: 'https://openblockcc.gitee.io/wiki/'
 });
 
 module.exports = ps2;

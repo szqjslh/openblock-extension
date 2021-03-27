@@ -17,7 +17,7 @@ const oled = formatMessage => ({
     toolbox: `toolbox.xml`,
     msg: `language`,
     tags: ['display'],
-    helpLink: 'https://www.baidu.com',
+    helpLink: 'https://openblockcc.gitee.io/wiki/'
     disabled: true
 });
 

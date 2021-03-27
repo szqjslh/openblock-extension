@@ -21,7 +21,7 @@ const softwareSerial = formatMessage => ({
     toolbox: `toolbox.js`,
     msg: `msg.js`,
     tags: ['other'],
-    helpLink: 'https://www.baidu.com'
+    helpLink: 'https://openblockcc.gitee.io/wiki/'
 });
 
 module.exports = softwareSerial;

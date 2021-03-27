@@ -17,7 +17,7 @@ const dht11 = formatMessage => ({
     toolbox: `toolbox.js`,
     msg: `msg.js`,
     tags: ['sensor'],
-    helpLink: 'https://www.baidu.com'
+    helpLink: 'https://openblockcc.gitee.io/wiki/'
 });
 
 module.exports = dht11;
