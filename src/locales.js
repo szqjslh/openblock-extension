@@ -11,7 +11,9 @@ module.exports = {
         'ironKit.description': 'Yiqichuang iron kit robot.',
         'servo.name': 'Servo',
         'servo.description': 'Classic servo support for microbit.',
-        'QDPRobot.description': 'QDP robot'
+        'QDPRobot.description': 'QDP robot.',
+        'ps2.name': 'PS2 remote control',
+        'ps2.description': 'PS2 wireless remote controller with 4 signal lines.'
     },
     'zh-cn': {
         'l298n.description': 'L298N 电机驱动模块.',
@@ -25,6 +27,8 @@ module.exports = {
         'ironKit.description': '意启创金属套件机器人.',
         'servo.name': '舵机',
         'servo.description': '让Microbit可以控制普通的舵机.',
-        'QDPRobot.description': '齐护机器人'
+        'QDPRobot.description': '齐护机器人.',
+        'ps2.name': 'PS2无线遥控器',
+        'ps2.description': '使用4根信号线的PS2无线遥控器'
     }
 };

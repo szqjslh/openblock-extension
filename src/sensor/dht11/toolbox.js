@@ -10,12 +10,12 @@ function addToolbox () {
     <block type="dht_init" id="dht_init">
         <value name="no">
             <shadow type="math_number">
-                <field name="NUM">1</field>
+                <field name="NUM" max="5" min="50">1</field>
             </shadow>
         </value>
         <value name="pin">
             <shadow type="math_number">
-                <field name="NUM">2</field>
+                <field name="NUM" disabled="true">2</field>
             </shadow>
         </value>
     </block>

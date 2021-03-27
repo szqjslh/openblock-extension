@@ -7,7 +7,7 @@ const QDPRobot = formatMessage => ({
     extensionId: 'QDPRobot',
     version: '1.0.0',
     type: 'arduino',
-    supportDevice: ['arduinoUno', 'arduinoNano', 'arduinoLeonardo', 'arduinoMega2560'],
+    supportDevice: [], // Hide kit extension in library
     author: 'QDProbot',
     iconURL: `asset/QH.png`,
     description: formatMessage({
@@ -20,7 +20,7 @@ const QDPRobot = formatMessage => ({
     generator: `generator.js`,
     toolbox: `toolbox.js`,
     msg: `msg.js`,
-    tags: ['actuator', 'sensor', 'display', 'communication', 'other'],
+    tags: ['kit'],
     helpLink: 'https://qdprobot.taobao.com'
 });
 

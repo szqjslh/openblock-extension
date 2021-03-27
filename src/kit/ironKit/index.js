@@ -3,7 +3,7 @@ const ironKit = formatMessage => ({
     extensionId: 'ironKit',
     version: '1.0.0',
     type: 'arduino',
-    supportDevice: ['ironKit'],
+    supportDevice: [], // Hide kit extension in library
     author: 'ArthurZheng',
     iconURL: `asset/ironKit.png`,
     description: formatMessage({
