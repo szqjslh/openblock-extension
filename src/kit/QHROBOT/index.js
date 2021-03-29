@@ -1,7 +1,3 @@
-/**
- * Note！ These codes are from third parties. Not currently reviewed by the community.
- * Please do not refer to the format specifications of these codes.
- */
 const QDPRobot = formatMessage => ({
     name: 'QDP',
     extensionId: 'QDPRobot',
