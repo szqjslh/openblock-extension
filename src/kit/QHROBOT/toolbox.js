@@ -1,3 +1,7 @@
+/**
+ * Note！ These codes are from third parties. Not currently reviewed by the community.
+ * Please do not refer to the format specifications of these codes.
+ */
 /* eslint-disable func-style */
 /* eslint-disable max-len */
 /* eslint-disable require-jsdoc */
