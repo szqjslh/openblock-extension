@@ -18,29 +18,33 @@ if (fs.existsSync(configPath)) {
     config.version = 'v0.0.1';
 }
 
-releaseDownloader.getReleaseList(`${config.user}/${config.repo}`).then(release => {
-    const latestVersion = release[0].tag_name;
-    const curentVersion = config.version;
+releaseDownloader.getReleaseList(`${config.user}/${config.repo}`)
+    .then(release => {
+        const latestVersion = release[0].tag_name;
+        const curentVersion = config.version;
 
-    if (compareVersions.compare(latestVersion, curentVersion, '>')) {
-        console.log(`new version detected: ${latestVersion}`);
+        if (compareVersions.compare(latestVersion, curentVersion, '>')) {
+            console.log(`new version detected: ${latestVersion}`);
 
-        rimraf(path.join(__dirname, '../extensions'), () => {
+            rimraf(path.join(__dirname, '../extensions'), () => {
 
-            ghdownload({user: config.user, repo: config.repo, ref: latestVersion},
-                path.join(__dirname, '../extensions'))
-                .on('error', err => {
-                    console.error(`error while downloading ${config.user}/${config.repo} ${latestVersion}:`, err);
-                })
-                .on('zip', zipUrl => {
-                    console.log(`${zipUrl} downloading...`);
-                })
-                .on('end', () => {
-                    console.log('finish');
+                ghdownload({user: config.user, repo: config.repo, ref: latestVersion},
+                    path.join(__dirname, '../extensions'))
+                    .on('error', err => {
+                        console.error(`error while downloading ${config.user}/${config.repo} ${latestVersion}:`, err);
+                    })
+                    .on('zip', zipUrl => {
+                        console.log(`${zipUrl} downloading...`);
+                    })
+                    .on('end', () => {
+                        console.log('finish');
 
-                    config.version = latestVersion;
-                    fs.writeFileSync(configPath, JSON.stringify(config));
-                });
-        });
-    }
-});
+                        config.version = latestVersion;
+                        fs.writeFileSync(configPath, JSON.stringify(config));
+                    });
+            });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+    });

@@ -8,6 +8,8 @@ const fs = require('fs');
 const copydir = require('copy-dir');
 const releaseDownloader = require('@fohlen/github-release-downloader');
 const ghdownload = require('github-download');
+const rimraf = require('rimraf');
+const compareVersions = require('compare-versions');
 
 /**
  * Configuration the default user data path.
@@ -110,19 +112,40 @@ class OpenBlockExtension extends Emitter{
     }
 
     checkForUpdates () {
-        releaseDownloader.getReleaseList('openblockcc/gittest').then(release => {
-            // console.log("release=", release[0]);
+        this._configPath = path.join(this._userDataPath, 'config.json');
 
-            console.log('element', release[0].tag_name);
+        if (fs.existsSync(this._configPath)) {
+            // eslint-disable-next-line global-require
+            this._config = require(this._configPath);
 
-            ghdownload({user: 'openblockcc', repo: 'gittest', ref: 'v1.1.0'}, path.join(__dirname, 'extensions'))
+            return new Promise(resolve => {
+                releaseDownloader.getReleaseList(`${this._config.user}/${this._config.repo}`).then(release => {
+                    this._latestVersion = release[0].tag_name;
+                    const curentVersion = this._config.version;
+
+                    resolve(compareVersions.compare(this._latestVersion, curentVersion, '>'));
+                });
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+        return Promise.resolve(false);
+    }
+
+    update () {
+        rimraf(this._userDataPath, () => {
+            ghdownload({user: this._config.user, repo: this._config.repo, ref: this._latestVersion}, this._userDataPath)
                 .on('error', err => {
-                    console.error('err=', err);
+                    console.error(`error while downloading ${this._config.user}/${this._config.repo} ${this._latestVersion}:`, err);
                 })
-                .on('end', stdout => {
-                    // exec('tree', function (err, stdout, sderr) {
-                    console.log('stdout=', stdout);
-                    // })
+                .on('zip', zipUrl => {
+                    console.log(`${zipUrl} downloading...`);
+                })
+                .on('end', () => {
+                    console.log('finish');
+
+                    this._config.version = this._latestVersion;
+                    fs.writeFileSync(this._configPath, JSON.stringify(this._config));
                 });
         });
     }

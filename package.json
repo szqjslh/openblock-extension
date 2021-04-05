@@ -9,7 +9,7 @@
     "fetch": "node ./script/download-extensions.js",
     "clean": "rimraf ../.openblockData/extensions extensions",
     "lint": "eslint ./",
-    "test": ""
+    "test": "node test.js"
   },
   "author": "ArthurZheng",
   "license": "MIT",
