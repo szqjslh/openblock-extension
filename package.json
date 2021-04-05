@@ -4,7 +4,7 @@
   "description": "External extensions for OpenBlock projects",
   "main": "index.js",
   "scripts": {
-    "postinstall": "node fetch",
+    "postinstall": "npm run fetch",
     "start": "rimraf ../.openblockData/extensions && node ./server.js",
     "fetch": "node ./script/download-extensions.js",
     "clean": "rimraf ../.openblockData/extensions extensions",
