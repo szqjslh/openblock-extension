@@ -136,7 +136,8 @@ class OpenBlockExtension extends Emitter{
         rimraf(this._userDataPath, () => {
             ghdownload({user: this._config.user, repo: this._config.repo, ref: this._latestVersion}, this._userDataPath)
                 .on('error', err => {
-                    console.error(`error while downloading ${this._config.user}/${this._config.repo} ${this._latestVersion}:`, err);
+                    console.error(`error while downloading ${this._config.user}/` +
+                        `${this._config.repo} ${this._latestVersion}:`, err);
                 })
                 .on('zip', zipUrl => {
                     console.log(`${zipUrl} downloading...`);

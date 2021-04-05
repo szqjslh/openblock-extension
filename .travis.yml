@@ -4,14 +4,17 @@ node_js:
 env:
   global:
   - NPM_TAG=latest
-  - RELEASE_VERSION="0.1.0-prerelease.$(date +'%Y%m%d%H%M%S')"
+  - RELEASE_TIMESTAMP="$(date +'%Y%m%d%H%M%S')"
 addons:
   chrome: stable
 cache:
   directories:
   - node_modules
 before_deploy:
+- VPKG=$($(npm bin)/json -f package.json version)
+- export RELEASE_VERSION=${VPKG}-prerelease.${RELEASE_TIMESTAMP}
 - npm --no-git-tag-version version $RELEASE_VERSION
+- npm run deploy
 deploy:
 - provider: npm
   on:
@@ -21,3 +24,10 @@ deploy:
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
   tag: $NPM_TAG
+- provider: pages
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  keep_history: true
+  on:
+    branch: main
+  local_dir: dist

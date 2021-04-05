@@ -1,13 +1,15 @@
 {
   "name": "openblock-extension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "External extensions for OpenBlock projects",
   "main": "index.js",
   "scripts": {
     "postinstall": "npm run fetch",
     "start": "rimraf ../.openblockData/extensions && node ./server.js",
     "fetch": "node ./script/download-extensions.js",
-    "clean": "rimraf ../.openblockData/extensions extensions",
+    "clean": "rimraf ../.openblockData/extensions extensions dist",
+    "build": "node ./script/generate-page.js --url=https://openblockcc.github.io/openblock-extension/",
+    "deploy": "npm run fetch && npm run build",
     "lint": "eslint ./",
     "test": "node test.js"
   },
@@ -28,6 +30,7 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "eslint": "^5.3.0",
-    "eslint-config-scratch": "^5.0.0"
+    "eslint-config-scratch": "^5.0.0",
+    "json": "^10.0.0"
   }
 }
