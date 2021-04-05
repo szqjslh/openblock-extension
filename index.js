@@ -26,12 +26,26 @@ const DEFAULT_PORT = 20120;
 const DEFAULT_LANGUAGE = 'en';
 
 /**
- * @class A server to provide local extensions resource.
+ * Extenions class.
+ * @readonly
+ */
+const EXTENSION_CLASS = ['sheild', 'actuator', 'sensor', 'communication', 'display', 'kit', 'other'];
+
+/**
+ * Device tyoe.
+ * @readonly
+ */
+const DEVICE_TYPE = ['arduino', 'microbit'];
+
+/**
+ * A server to provide local extensions resource.
  */
 class OpenBlockExtension extends Emitter{
 
     /**
      * Construct a OpenBlock extension server object.
+     * @param {string} userDataPath - the path of user data.
+     * @param {string} extensionsPath - the path of initial extensions data.
      */
     constructor (userDataPath, extensionsPath) {
         super();
@@ -58,81 +72,21 @@ class OpenBlockExtension extends Emitter{
 
     checkFirstRun () {
         if (!fs.existsSync(this._userDataPath)) {
-            console.log(`First start, copy extensions file to ${this._userDataPath}`);
+            console.log(`copy extensions file to ${this._userDataPath}`);
             return true;
         }
         return false;
     }
 
     copyToUserDataPath () {
-        formatMessage.setup({missingTranslation: 'ignore'});
-
-        const extensions = requireAll({
-            dirname: this._extensionsPath,
-            filter: /index.js$/,
-            recursive: true
-        });
-
-        Object.entries(extensions).forEach(catlog => {
-            Object.entries(catlog[1]).forEach(ext => {
-                const basePath = path.join(catlog[0], ext[0]);
-                const src = path.join(this._extensionsPath, basePath);
-                const dst = path.join(this._userDataPath, 'exts', basePath);
-                const type = ext[1]['index.js'](formatMessage).type;
-
-                if (!fs.existsSync(dst)) {
-                    fs.mkdirSync(dst, {recursive: true});
-                }
-
-                copydir.sync(src, dst,
-                    {
-                        utimes: true,
-                        mode: true,
-                        filter: function (stat, filepath, filename){
-                        // do not want copy lib directories
-                            if (stat === 'directory' && filename === 'lib') {
-                                return false;
-                            }
-                            return true;
-                        }
-                    }
-                );
-
-                // if arduino copy the lib to '${this._userDataPath}/libraries/Arduino' if it is exist.
-                if (type === 'arduino') {
-                    const lib = path.join(src, 'lib');
-                    const arduinoLibPath = path.join(this._userDataPath, 'libraries/Arduino');
-                    if (fs.existsSync(lib)) {
-                        if (!fs.existsSync(arduinoLibPath)) {
-                            fs.mkdirSync(arduinoLibPath, {recursive: true});
-                        }
-                        copydir.sync(path.join(src, 'lib'), arduinoLibPath,
-                            {utimes: true, mode: true});
-                    }
-                } else if (type === 'microbit') {
-                    // if microbit copy the lib to '${this._userDataPath}/libraries/Microbit' if it is exist.
-                    const lib = path.join(src, 'lib');
-                    const microbitLibPath = path.join(this._userDataPath, 'libraries/Microbit');
-                    if (fs.existsSync(lib)) {
-                        if (!fs.existsSync(microbitLibPath)) {
-                            fs.mkdirSync(microbitLibPath, {recursive: true});
-                        }
-                        copydir.sync(path.join(src, 'lib'), microbitLibPath,
-                            {utimes: true, mode: true});
-                    }
-                }
-            });
-        });
-
-        // Copy the tranlation file to the userDataPath for extenions's index file.
-        copydir.sync(path.join(this._extensionsPath, 'locales.js'),
-            path.join(this._userDataPath, 'exts/locales.js'), {utimes: true, mode: true});
-
-        formatMessage.setup({missingTranslation: 'warning'});
+        if (!fs.existsSync(this._userDataPath)) {
+            fs.mkdirSync(this._userDataPath, {recursive: true});
+        }
+        copydir.sync(this._extensionsPath, this._userDataPath, {utimes: true, mode: true});
     }
 
     setLocale () {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             osLocale().then(locale => {
                 if (locale === 'zh-CN') {
                     this._locale = 'zh-cn';
@@ -141,13 +95,12 @@ class OpenBlockExtension extends Emitter{
                 } else {
                     this._locale = locale;
                 }
-
                 console.log('set locale:', this._locale);
 
                 formatMessage.setup({
                     locale: this._locale,
                     // eslint-disable-next-line global-require
-                    translations: require(path.join(this._userDataPath, 'exts', 'locales.js'))
+                    translations: require(path.join(this._userDataPath, 'locales.js'))
                 });
                 return resolve();
             });
@@ -164,27 +117,32 @@ class OpenBlockExtension extends Emitter{
         }
 
         this.setLocale().then(() => {
-            const extensions = requireAll({
-                dirname: `${this._userDataPath}/exts`,
-                filter: /index.js$/,
-                recursive: true
-            });
-
             const extensionsThumbnailData = [];
-            Object.entries(extensions).forEach(catlog => {
-                Object.entries(catlog[1]).forEach(ext => {
 
-                    const content = ext[1]['index.js'](formatMessage);
-                    const basePath = path.join(catlog[0], ext[0]);
+            DEVICE_TYPE.forEach(deviceType => {
+                EXTENSION_CLASS.forEach(extClass => {
+                    const extPath = path.join(this._userDataPath, deviceType, extClass);
+                    if (fs.existsSync(extPath)) {
+                        const data = requireAll({dirname: extPath, filter: /index.js$/, recursive: true});
+                        Object.entries(data).forEach(ext => {
+                            // Modify the attribute to point to the real address.
+                            const content = ext[1]['index.js'](formatMessage);
+                            const basePath = path.join(deviceType, extClass, ext[0]);
 
-                    if (content.iconURL) {
-                        content.iconURL = path.join(basePath, content.iconURL);
+                            if (content.iconURL) {
+                                content.iconURL = path.join(basePath, content.iconURL);
+                            }
+                            content.blocks = path.join(basePath, content.blocks);
+                            content.generator = path.join(basePath, content.generator);
+                            content.toolbox = path.join(basePath, content.toolbox);
+                            content.msg = path.join(basePath, content.msg);
+
+                            if (content.library) {
+                                content.library = path.join(extPath, ext[0], content.library);
+                            }
+                            extensionsThumbnailData.push(content);
+                        });
                     }
-                    content.blocks = path.join(basePath, content.blocks);
-                    content.generator = path.join(basePath, content.generator);
-                    content.toolbox = path.join(basePath, content.toolbox);
-                    content.msg = path.join(basePath, content.msg);
-                    extensionsThumbnailData.push(content);
                 });
             });
 
@@ -195,7 +153,7 @@ class OpenBlockExtension extends Emitter{
                 res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
                 next();
             });
-            this._app.use(express.static(`${this._userDataPath}/exts`));
+            this._app.use(express.static(`${this._userDataPath}`));
 
             this._app.get('/', (req, res) => {
                 res.send(JSON.stringify(extensionsThumbnailData));
@@ -204,7 +162,7 @@ class OpenBlockExtension extends Emitter{
             this._app.listen(this._socketPort);
 
             this.emit('ready');
-            console.log('socket server listend:', `http://127.0.0.1:${this._socketPort}`);
+            console.log(`socket server listend: http://0.0.0.0:${this._socketPort}\n\nOpenblock extension server start successfully`);
         });
     }
 }

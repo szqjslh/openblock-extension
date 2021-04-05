@@ -4,10 +4,10 @@
   "description": "External extensions for OpenBlock projects",
   "main": "index.js",
   "scripts": {
-    "start": "rimraf ../.openblockData/extensions && node ./server.js",
+    "start": "npm run clean && node ./server.js",
     "clean": "rimraf ../.openblockData/extensions",
     "lint": "eslint ./src",
-    "test": ""
+    "test": "node ./test.js"
   },
   "author": "ArthurZheng",
   "license": "MIT",
