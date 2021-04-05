@@ -10,3 +10,7 @@
 # Coverage created files
 /.nyc_output
 /coverage
+
+# Extensions files
+/extensions
+

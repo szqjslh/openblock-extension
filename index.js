@@ -6,6 +6,8 @@ const Emitter = require('events');
 const path = require('path');
 const fs = require('fs');
 const copydir = require('copy-dir');
+const releaseDownloader = require('@fohlen/github-release-downloader');
+const ghdownload = require('github-download');
 
 /**
  * Configuration the default user data path.
@@ -59,7 +61,7 @@ class OpenBlockExtension extends Emitter{
         if (extensionsPath) {
             this._extensionsPath = extensionsPath;
         } else {
-            this._extensionsPath = path.join(__dirname, 'src');
+            this._extensionsPath = path.join(__dirname, 'extensions');
         }
 
         this._socketPort = DEFAULT_PORT;
@@ -104,6 +106,24 @@ class OpenBlockExtension extends Emitter{
                 });
                 return resolve();
             });
+        });
+    }
+
+    checkForUpdates () {
+        releaseDownloader.getReleaseList('openblockcc/gittest').then(release => {
+            // console.log("release=", release[0]);
+
+            console.log('element', release[0].tag_name);
+
+            ghdownload({user: 'openblockcc', repo: 'gittest', ref: 'v1.1.0'}, path.join(__dirname, 'extensions'))
+                .on('error', err => {
+                    console.error('err=', err);
+                })
+                .on('end', stdout => {
+                    // exec('tree', function (err, stdout, sderr) {
+                    console.log('stdout=', stdout);
+                    // })
+                });
         });
     }
 
