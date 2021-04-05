@@ -68,9 +68,12 @@ Object.entries(translations).forEach(locale => {
     copydir.sync(path.join(__dirname, '../extensions'), path.join(__dirname, '../dist'), {
         utimes: true,
         mode: true,
-        filter: (stat, filepath) => {
+        filter: (stat, filepath, filename) => {
             // do not want copy .js files
-            if (stat === 'file' && path.extname(filepath) === '.js') {
+            if (stat === 'file' && (filename === 'index.js' || filename === 'locales.js')) {
+                return false;
+            }
+            if (stat === 'directory' && filename === 'lib') {
                 return false;
             }
             return true;
