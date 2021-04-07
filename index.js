@@ -120,22 +120,26 @@ class OpenBlockExtension extends Emitter{
 
                 this._config = require(this._configPath); // eslint-disable-line global-require
 
-                // Get the latest version for remote server
-                releaseDownloader.getReleaseList(`${this._config.user}/${this._config.repo}`)
-                    .then(release => {
-                        const latestVersion = release[0].tag_name;
-                        if (this._config.version) {
-                            const curentVersion = this._config.version;
-                            if (compareVersions.compare(latestVersion, curentVersion, '>')) {
-                                return resolve(latestVersion);
+                if (this._config.user && this._config.repo) {
+                    // Get the latest version for remote server
+                    releaseDownloader.getReleaseList(`${this._config.user}/${this._config.repo}`)
+                        .then(release => {
+                            const latestVersion = release[0].tag_name;
+                            if (this._config.version) {
+                                const curentVersion = this._config.version;
+                                if (compareVersions.compare(latestVersion, curentVersion, '>')) {
+                                    return resolve(latestVersion);
+                                }
+                            } else {
+                                return reject(`Cannot find version tag in: ${this._configPath}`);
                             }
-                        } else {
-                            return reject(`Cannot find version tag in: ${this._configPath}`);
-                        }
-                        return resolve();
-                    })
-                    .catch(err => reject(`Error while getting realse list of ` +
+                            return resolve();
+                        })
+                        .catch(err => reject(`Error while getting realse list of ` +
                         `${this._config.user}/${this._config.repo}: ${err}`));
+                } else {
+                    return reject(`Cannot find valid git repo configuration in: ${this._configPath}`);
+                }
             } else {
                 return reject(`Cannot find file: ${this._configPath}`);
             }
