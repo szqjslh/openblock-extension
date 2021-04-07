@@ -1,10 +1,12 @@
 const OpenBlockExtension = require('./index');
 
 const extensionServer = new OpenBlockExtension();
-extensionServer.checkForUpdates().then(sta => {
-    console.log(`new version detected?: ${sta}`);
 
-    if (sta) {
-        extensionServer.update();
-    }
-});
+// Test the update funciton.
+extensionServer.checkAndDownloadUpdate().then(info => {
+    console.log('info =', info);
+    extensionServer.update();
+})
+    .catch(err => {
+        console.log('err =', err);
+    });

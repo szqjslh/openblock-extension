@@ -26,23 +26,22 @@ releaseDownloader.getReleaseList(`${config.user}/${config.repo}`)
         if (compareVersions.compare(latestVersion, curentVersion, '>')) {
             console.log(`new version detected: ${latestVersion}`);
 
-            rimraf(path.join(__dirname, '../extensions'), () => {
+            rimraf.sync(path.join(__dirname, '../extensions'));
 
-                ghdownload({user: config.user, repo: config.repo, ref: latestVersion},
-                    path.join(__dirname, '../extensions'))
-                    .on('error', err => {
-                        console.error(`error while downloading ${config.user}/${config.repo} ${latestVersion}:`, err);
-                    })
-                    .on('zip', zipUrl => {
-                        console.log(`${zipUrl} downloading...`);
-                    })
-                    .on('end', () => {
-                        console.log('finish');
+            ghdownload({user: config.user, repo: config.repo, ref: latestVersion},
+                path.join(__dirname, '../extensions'))
+                .on('error', err => {
+                    console.error(`error while downloading ${config.user}/${config.repo} ${latestVersion}:`, err);
+                })
+                .on('zip', zipUrl => {
+                    console.log(`${zipUrl} downloading...`);
+                })
+                .on('end', () => {
+                    console.log('finish');
 
-                        config.version = latestVersion;
-                        fs.writeFileSync(configPath, JSON.stringify(config));
-                    });
-            });
+                    config.version = latestVersion;
+                    fs.writeFileSync(configPath, JSON.stringify(config));
+                });
         }
     })
     .catch(err => {

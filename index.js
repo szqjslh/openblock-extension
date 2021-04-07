@@ -60,6 +60,9 @@ class OpenBlockExtension extends Emitter{
             this._userDataPath = path.join(DEFAULT_USER_DATA_PATH, 'extensions');
         }
 
+        this._updaterPath = path.join(this._userDataPath, '../updater/extensions');
+        this._configPath = path.join(this._userDataPath, 'config.json');
+
         if (extensionsPath) {
             this._extensionsPath = extensionsPath;
         } else {
@@ -111,44 +114,90 @@ class OpenBlockExtension extends Emitter{
         });
     }
 
-    checkForUpdates () {
-        this._configPath = path.join(this._userDataPath, 'config.json');
+    checkShouldUpdate () {
+        return new Promise((resolve, reject) => {
+            if (fs.existsSync(this._configPath)) {
 
-        if (fs.existsSync(this._configPath)) {
-            // eslint-disable-next-line global-require
-            this._config = require(this._configPath);
+                this._config = require(this._configPath); // eslint-disable-line global-require
 
-            return new Promise(resolve => {
-                releaseDownloader.getReleaseList(`${this._config.user}/${this._config.repo}`).then(release => {
-                    this._latestVersion = release[0].tag_name;
-                    const curentVersion = this._config.version;
+                // Get the latest version for remote server
+                releaseDownloader.getReleaseList(`${this._config.user}/${this._config.repo}`)
+                    .then(release => {
+                        const latestVersion = release[0].tag_name;
+                        if (this._config.version) {
+                            const curentVersion = this._config.version;
+                            if (compareVersions.compare(latestVersion, curentVersion, '>')) {
+                                return resolve(latestVersion);
+                            }
+                        } else {
+                            return reject(`Cannot find version tag in: ${this._configPath}`);
+                        }
+                        return resolve();
+                    })
+                    .catch(err => reject(`Error while getting realse list of ` +
+                        `${this._config.user}/${this._config.repo}: ${err}`));
+            } else {
+                return reject(`Cannot find file: ${this._configPath}`);
+            }
+        });
+    }
 
-                    resolve(compareVersions.compare(this._latestVersion, curentVersion, '>'));
-                });
-            }).catch(err => {
-                console.error(err);
-            });
-        }
-        return Promise.resolve(false);
+    checkAndDownloadUpdate () {
+        return new Promise((resolve, reject) => {
+            this.checkShouldUpdate().then(version => {
+                if (version) {
+                    console.log('new version detected:', version);
+                    this._updaterVersion = version;
+
+                    const updaterExtensionConfig = path.join(this._updaterPath, 'config.json');
+                    if (fs.existsSync(updaterExtensionConfig)) {
+                        // read the extension version in updater
+                        // eslint-disable-next-line global-require
+                        const updaterExtensionVersion = require(updaterExtensionConfig).updaterVersion;
+                        // the new version has been downloaded
+                        if (updaterExtensionVersion === version) {
+                            return resolve('skip download, the latest version has been downloaded');
+                        }
+                    }
+
+                    // if there is no updater dir, create it
+                    if (!fs.existsSync(path.join(this._updaterPath, '../'))){
+                        fs.mkdirSync(path.join(this._updaterPath, '../'), {recursive: true});
+                    }
+
+                    // delet the old data and download new
+                    rimraf.sync(this._updaterPath);
+                    // download and unzip the new extensions
+                    ghdownload({user: this._config.user, repo: this._config.repo, ref: version}, this._updaterPath)
+                        .on('error', err => reject(`Error while downloading ${this._config.user}/` +
+                            `${this._config.repo} ${this._latestVersion}: ${err}`))
+                        .on('zip', zipUrl => {
+                            console.log(`${zipUrl} downloading...`);
+                        })
+                        .on('end', () => {
+                            const config = Object.assign({}, this._config);
+                            delete config.version;
+                            config.updaterVersion = version;
+                            fs.writeFileSync(updaterExtensionConfig, JSON.stringify(config));
+                            return resolve('download finish');
+                        });
+                } else {
+                    return reject('Already up to date.');
+                }
+            })
+                .catch(err => reject(`Error while checking the update: ${err}`));
+        });
     }
 
     update () {
-        rimraf(this._userDataPath, () => {
-            ghdownload({user: this._config.user, repo: this._config.repo, ref: this._latestVersion}, this._userDataPath)
-                .on('error', err => {
-                    console.error(`error while downloading ${this._config.user}/` +
-                        `${this._config.repo} ${this._latestVersion}:`, err);
-                })
-                .on('zip', zipUrl => {
-                    console.log(`${zipUrl} downloading...`);
-                })
-                .on('end', () => {
-                    console.log('finish');
-
-                    this._config.version = this._latestVersion;
-                    fs.writeFileSync(this._configPath, JSON.stringify(this._config));
-                });
-        });
+        rimraf.sync(this._userDataPath);
+        copydir.sync(this._updaterPath, this._userDataPath, {utimes: true, mode: true});
+        rimraf.sync(this._updaterPath);
+        // write the new version tag to config.json to finitsh upload
+        const config = Object.assign({}, this._config);
+        config.version = this._updaterVersion;
+        fs.writeFileSync(this._configPath, JSON.stringify(config));
+        console.log('update finish');
     }
 
     /**
